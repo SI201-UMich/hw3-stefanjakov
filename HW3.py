@@ -48,7 +48,14 @@ class CouponDispenser:
             str
         """
         # TODO: Implement per instructions
-        pass
+        returned_string = ""
+        for coupon, i in enumerate(self.coupon_cards):
+            if i == (len(self.coupon_cards) - 1):
+                returned_string = returned_string + str(coupon) + "|"
+            else:
+                returned_string = returned_string + str(coupon) + "\n"
+
+        return returned_string
 
     def issue_coupon(self, name):
         """

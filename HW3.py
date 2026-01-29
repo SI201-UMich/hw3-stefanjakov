@@ -73,6 +73,8 @@ class CouponDispenser:
         """
         # TODO: Implement per instructions
         if len(self.coupon_cards) == 0:
+            # TODO: delete this
+            print("This is not the case")
             return "The box is empty"
         
         name_idx: int = -1
@@ -85,12 +87,11 @@ class CouponDispenser:
             current_coupon: str = self.coupon_cards[self.issued_indices[name_idx]]
             return f"That name already has a coupon: {current_coupon}"
         else:
-            new_coupon_idx: int = random.randint(0, len(self.coupon_cards))
+            new_coupon_idx: int = random.randint(0, len(self.coupon_cards) - 1)
             self.custom_roster.append(name)
             self.issued_indices.append(new_coupon_idx)
+            return f"{self.coupon_cards[new_coupon_idx]}"
 
-        
-        
 
     def distribute_session(self):
         """
@@ -108,7 +109,26 @@ class CouponDispenser:
         Reminder: Use lists only (no dictionaries).
         """
         # TODO: Implement per instructions 
-        pass
+        round_number: int = 1
+        user_input: str = input(f"Round {round_number} - Enter a name (or a comma-separated list), or type 'show' or 'exit': ")
+        while user_input != 'exit':
+            if user_input == 'show':
+                for i in range(len(self.custom_roster)):
+                    name: str = self.custom_roster[i]
+                    coupon: str = self.coupon_cards[self.issued_indices[i]]
+                    print(f"{name}: {coupon}")
+            else:
+                names: list[str] = user_input.split(",")
+                for name in names:
+                    if name == "":
+                        continue
+                    name = name.strip()
+                    print(name)
+                    print(self.issue_coupon(name))
+            user_input: str = input(f"Round {round_number} - Enter a name (or a comma-separated list), or type 'show' or 'exit': ")
+
+
+        print("Goodbye!")
 
     def tally_distribution(self):
         """
@@ -145,10 +165,10 @@ def main():
     ]
 
     # Uncomment the lines below as you implement each function.
-    # box = CouponDispenser(coupon_cards)
-    # box.distribute_session()
+    box = CouponDispenser(coupon_cards)
+    box.distribute_session()
     # box.tally_distribution()
-    pass
+    test()
 
 
 # -----------------------

@@ -49,7 +49,7 @@ class CouponDispenser:
         """
         # TODO: Implement per instructions
         returned_string = ""
-        for coupon, i in enumerate(self.coupon_cards):
+        for i, coupon in enumerate(self.coupon_cards):
             if i == (len(self.coupon_cards) - 1):
                 returned_string = returned_string + str(coupon) + "|"
             else:
@@ -72,7 +72,25 @@ class CouponDispenser:
             str: message as described above
         """
         # TODO: Implement per instructions
-        pass
+        if len(self.coupon_cards) == 0:
+            return "The box is empty"
+        
+        name_idx: int = -1
+        for i, name_in_roster in enumerate(self.custom_roster):
+            if name_in_roster == name:
+                name_idx = i
+
+        # if.. in roster
+        if name_idx != -1:
+            current_coupon: str = self.coupon_cards[self.issued_indices[name_idx]]
+            return f"That name already has a coupon: {current_coupon}"
+        else:
+            new_coupon_idx: int = random.randint(0, len(self.coupon_cards))
+            self.custom_roster.append(name)
+            self.issued_indices.append(new_coupon_idx)
+
+        
+        
 
     def distribute_session(self):
         """

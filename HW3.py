@@ -36,7 +36,7 @@ class CouponDispenser:
         """
         # TODO: Implement per instructions
         self.coupon_cards: list[str] = coupon_cards
-        self.custom_roster: list[str] = []
+        self.customer_roster: list[str] = []
         self.issued_indices: list[int] = []
 
     def __str__(self):
@@ -50,10 +50,9 @@ class CouponDispenser:
         # TODO: Implement per instructions
         returned_string = ""
         for i, coupon in enumerate(self.coupon_cards):
-            if i == (len(self.coupon_cards) - 1):
-                returned_string = returned_string + str(coupon) + "|"
-            else:
-                returned_string = returned_string + str(coupon) + "\n"
+            returned_string += str(coupon)
+            if i != len(self.coupon_cards) - 1:
+                returned_string += "|"
 
         return returned_string
 
@@ -73,12 +72,10 @@ class CouponDispenser:
         """
         # TODO: Implement per instructions
         if len(self.coupon_cards) == 0:
-            # TODO: delete this
-            print("This is not the case")
-            return "The box is empty"
+            return "The box is empty."
         
         name_idx: int = -1
-        for i, name_in_roster in enumerate(self.custom_roster):
+        for i, name_in_roster in enumerate(self.customer_roster):
             if name_in_roster == name:
                 name_idx = i
 
@@ -88,7 +85,7 @@ class CouponDispenser:
             return f"That name already has a coupon: {current_coupon}"
         else:
             new_coupon_idx: int = random.randint(0, len(self.coupon_cards) - 1)
-            self.custom_roster.append(name)
+            self.customer_roster.append(name)
             self.issued_indices.append(new_coupon_idx)
             return f"{self.coupon_cards[new_coupon_idx]}"
 
@@ -112,18 +109,18 @@ class CouponDispenser:
         round_number: int = 1
         user_input: str = input(f"Round {round_number} - Enter a name (or a comma-separated list), or type 'show' or 'exit': ")
         while user_input != 'exit':
+            round_number += 1
             if user_input == 'show':
-                for i in range(len(self.custom_roster)):
-                    name: str = self.custom_roster[i]
+                for i in range(len(self.customer_roster)):
+                    name: str = self.customer_roster[i]
                     coupon: str = self.coupon_cards[self.issued_indices[i]]
                     print(f"{name}: {coupon}")
             else:
                 names: list[str] = user_input.split(",")
                 for name in names:
-                    if name == "":
-                        continue
                     name = name.strip()
-                    print(name)
+                    if not name:
+                        continue
                     print(self.issue_coupon(name))
             user_input: str = input(f"Round {round_number} - Enter a name (or a comma-separated list), or type 'show' or 'exit': ")
 
@@ -146,17 +143,20 @@ class CouponDispenser:
             None
         """
         # TODO: Implement per instructions
-        pass
+        if len(self.issued_indices) == 0:
+            print("Empty")
+            return
+
+        for coupon_idx in range(len(self.coupon_cards)):
+            count = 0
+            for issued_idx in self.issued_indices:
+                if issued_idx == coupon_idx:
+                    count += 1
+
+            print(f"{self.coupon_cards[coupon_idx]} distribution count: {count}.")
 
 
 def main():
-    """
-    Driver function:
-      - Define the coupon_cards list (example coupons below)
-      - Create a CouponDispenser
-      - Start the interaction via distribute_session()
-      - After exit, call tally_distribution() to print the distribution in the terminal
-    """
     coupon_cards = [
         "10% off",
         "Free small coffee",
@@ -167,8 +167,7 @@ def main():
     # Uncomment the lines below as you implement each function.
     box = CouponDispenser(coupon_cards)
     box.distribute_session()
-    # box.tally_distribution()
-    test()
+    box.tally_distribution()
 
 
 # -----------------------
